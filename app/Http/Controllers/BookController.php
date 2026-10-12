@@ -24,26 +24,40 @@ class BookController extends Controller
     // Menyimpan buku baru
     public function store(Request $request)
     {
-        $request->validate([
-            'judul' => 'required',
-            'penulis' => 'required',
-            'tahun_terbit' => 'required|integer',
-            'stok' => 'required|integer',
+        // VALIDASI
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'penulis' => 'required|string|max:255',
+            'tahun_terbit' => 'required|integer|min:1000|max:' . date('Y'),
+            'stok' => 'required|integer|min:0',
+        ], [
+            'judul.required' => 'Judul buku wajib diisi.',
+            'judul.string' => 'Judul buku harus berupa teks.',
+            'judul.max' => 'Judul buku maksimal 255 karakter.',
+
+            'penulis.required' => 'Penulis wajib diisi.',
+            'penulis.string' => 'Penulis harus berupa teks.',
+            'penulis.max' => 'Nama penulis maksimal 255 karakter.',
+
+            'tahun_terbit.required' => 'Tahun terbit wajib diisi.',
+            'tahun_terbit.integer' => 'Tahun terbit harus berupa angka.',
+            'tahun_terbit.min' => 'Tahun terbit tidak valid.',
+            'tahun_terbit.max' => 'Tahun terbit tidak boleh lebih dari tahun sekarang.',
+
+            'stok.required' => 'Stok wajib diisi.',
+            'stok.integer' => 'Stok harus berupa angka.',
+            'stok.min' => 'Stok tidak boleh kurang dari 0.',
         ]);
 
-        Book::create([
-            'judul' => $request->judul,
-            'penulis' => $request->penulis,
-            'tahun_terbit' => $request->tahun_terbit,
-            'stok' => $request->stok,
-        ]);
+        // Simpan data
+        Book::create($validated);
 
         return redirect()
             ->route('books.index')
             ->with('success', 'Buku berhasil ditambahkan.');
     }
 
-    // Menampilkan form edit buku
+    // Menampilkan form edit
     public function edit(Book $book)
     {
         return view('books.edit', compact('book'));
@@ -52,19 +66,33 @@ class BookController extends Controller
     // Menyimpan perubahan buku
     public function update(Request $request, Book $book)
     {
-        $request->validate([
-            'judul' => 'required',
-            'penulis' => 'required',
-            'tahun_terbit' => 'required|integer',
-            'stok' => 'required|integer',
+        // VALIDASI
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'penulis' => 'required|string|max:255',
+            'tahun_terbit' => 'required|integer|min:1000|max:' . date('Y'),
+            'stok' => 'required|integer|min:0',
+        ], [
+            'judul.required' => 'Judul buku wajib diisi.',
+            'judul.string' => 'Judul buku harus berupa teks.',
+            'judul.max' => 'Judul buku maksimal 255 karakter.',
+
+            'penulis.required' => 'Penulis wajib diisi.',
+            'penulis.string' => 'Penulis harus berupa teks.',
+            'penulis.max' => 'Nama penulis maksimal 255 karakter.',
+
+            'tahun_terbit.required' => 'Tahun terbit wajib diisi.',
+            'tahun_terbit.integer' => 'Tahun terbit harus berupa angka.',
+            'tahun_terbit.min' => 'Tahun terbit tidak valid.',
+            'tahun_terbit.max' => 'Tahun terbit tidak boleh lebih dari tahun sekarang.',
+
+            'stok.required' => 'Stok wajib diisi.',
+            'stok.integer' => 'Stok harus berupa angka.',
+            'stok.min' => 'Stok tidak boleh kurang dari 0.',
         ]);
 
-        $book->update([
-            'judul' => $request->judul,
-            'penulis' => $request->penulis,
-            'tahun_terbit' => $request->tahun_terbit,
-            'stok' => $request->stok,
-        ]);
+        // Update data
+        $book->update($validated);
 
         return redirect()
             ->route('books.index')

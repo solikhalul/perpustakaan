@@ -9,50 +9,45 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            background: #f4f4f4;
             margin: 0;
             padding: 40px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1450px;
             margin: auto;
-            background-color: white;
-            padding: 30px;
+            background: white;
+            padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 30px;
-            color: #222;
-        }
-
-        .top-button {
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
 
         .btn-tambah {
             display: inline-block;
-            padding: 10px 18px;
-            background-color: #0d6efd;
+            background: #0d6efd;
             color: white;
+            padding: 14px 24px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-weight: bold;
+            margin-bottom: 25px;
         }
 
         .btn-tambah:hover {
-            background-color: #0b5ed7;
+            background: #0b5ed7;
         }
 
         .success {
-            background-color: #d1e7dd;
+            background: #d1e7dd;
             color: #0f5132;
-            padding: 12px 15px;
-            margin-bottom: 20px;
+            padding: 15px;
             border-radius: 5px;
+            margin-bottom: 20px;
         }
 
         table {
@@ -61,62 +56,43 @@
         }
 
         th {
-            background-color: #333;
+            background: #333;
             color: white;
-            padding: 14px;
+            padding: 15px;
             text-align: left;
         }
 
         td {
-            padding: 14px;
+            padding: 15px;
             border: 1px solid #ddd;
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #e9ecef;
+            background: #f2f2f2;
         }
 
         .btn-edit {
-            display: inline-block;
-            padding: 7px 12px;
-            background-color: #ffc107;
-            color: #000;
+            background: #ffc107;
+            color: black;
+            padding: 10px 16px;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 5px;
             font-weight: bold;
-            margin-right: 5px;
-        }
-
-        .btn-edit:hover {
-            background-color: #ffca2c;
         }
 
         .btn-hapus {
-            padding: 7px 12px;
-            background-color: #dc3545;
+            background: #dc3545;
             color: white;
+            padding: 10px 16px;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            border-radius: 5px;
             font-weight: bold;
+            cursor: pointer;
         }
 
-        .btn-hapus:hover {
-            background-color: #bb2d3b;
-        }
-
-        .form-hapus {
-            display: inline;
-        }
-
-        .kosong {
-            text-align: center;
-            padding: 30px;
-            color: #666;
+        .aksi {
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -127,19 +103,16 @@
 
     <h1>Daftar Buku Perpustakaan</h1>
 
-    {{-- Tombol tambah buku --}}
-    <div class="top-button">
-        <a href="{{ route('books.create') }}" class="btn-tambah">
-            + Tambah Buku
-        </a>
-    </div>
-
-    {{-- Pesan berhasil --}}
-    @if (session('success'))
+    {{-- Pesan sukses --}}
+    @if(session('success'))
         <div class="success">
             {{ session('success') }}
         </div>
     @endif
+
+    <a href="{{ route('books.create') }}" class="btn-tambah">
+        + Tambah Buku
+    </a>
 
     <table>
 
@@ -156,69 +129,55 @@
 
         <tbody>
 
-            @forelse ($books as $book)
+            @forelse($books as $book)
 
                 <tr>
+                    <td>{{ $book->id }}</td>
+
+                    <td>{{ $book->judul }}</td>
+
+                    <td>{{ $book->penulis }}</td>
+
+                    <td>{{ $book->tahun_terbit }}</td>
+
+                    <td>{{ $book->stok }}</td>
 
                     <td>
-                        {{ $book->id }}
-                    </td>
+                        <div class="aksi">
 
-                    <td>
-                        {{ $book->judul }}
-                    </td>
-
-                    <td>
-                        {{ $book->penulis }}
-                    </td>
-
-                    <td>
-                        {{ $book->tahun_terbit }}
-                    </td>
-
-                    <td>
-                        {{ $book->stok }}
-                    </td>
-
-                    <td>
-
-                        {{-- Tombol Edit --}}
-                        <a
-                            href="{{ route('books.edit', $book->id) }}"
-                            class="btn-edit"
-                        >
-                            Edit
-                        </a>
-
-                        {{-- Tombol Hapus --}}
-                        <form
-                            action="{{ route('books.destroy', $book->id) }}"
-                            method="POST"
-                            class="form-hapus"
-                        >
-
-                            @csrf
-
-                            @method('DELETE')
-
-                            <button
-                                type="submit"
-                                class="btn-hapus"
-                                onclick="return confirm('Yakin ingin menghapus buku ini?')"
+                            <a
+                                href="{{ route('books.edit', $book->id) }}"
+                                class="btn-edit"
                             >
-                                Hapus
-                            </button>
+                                Edit
+                            </a>
 
-                        </form>
+                            <form
+                                action="{{ route('books.destroy', $book->id) }}"
+                                method="POST"
+                                onsubmit="return confirm('Yakin ingin menghapus buku ini?')"
+                            >
 
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    type="submit"
+                                    class="btn-hapus"
+                                >
+                                    Hapus
+                                </button>
+
+                            </form>
+
+                        </div>
                     </td>
-
                 </tr>
 
             @empty
 
                 <tr>
-                    <td colspan="6" class="kosong">
+                    <td colspan="6" style="text-align:center;">
                         Belum ada data buku.
                     </td>
                 </tr>
