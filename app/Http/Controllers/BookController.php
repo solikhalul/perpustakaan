@@ -24,7 +24,6 @@ class BookController extends Controller
     // Menyimpan buku baru
     public function store(Request $request)
     {
-        // VALIDASI
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'penulis' => 'required|string|max:255',
@@ -49,7 +48,6 @@ class BookController extends Controller
             'stok.min' => 'Stok tidak boleh kurang dari 0.',
         ]);
 
-        // Simpan data
         Book::create($validated);
 
         return redirect()
@@ -57,16 +55,21 @@ class BookController extends Controller
             ->with('success', 'Buku berhasil ditambahkan.');
     }
 
-    // Menampilkan form edit
+    // Menampilkan detail buku
+    public function show(Book $book)
+    {
+        return view('books.show', compact('book'));
+    }
+
+    // Menampilkan form edit buku
     public function edit(Book $book)
     {
         return view('books.edit', compact('book'));
     }
 
-    // Menyimpan perubahan buku
+    // Memperbarui data buku
     public function update(Request $request, Book $book)
     {
-        // VALIDASI
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'penulis' => 'required|string|max:255',
@@ -91,7 +94,6 @@ class BookController extends Controller
             'stok.min' => 'Stok tidak boleh kurang dari 0.',
         ]);
 
-        // Update data
         $book->update($validated);
 
         return redirect()

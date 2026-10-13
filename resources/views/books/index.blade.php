@@ -3,51 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Daftar Buku</title>
+    <title>Daftar Buku - Library System</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 40px;
+        * {
+            box-sizing: border-box;
         }
 
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1e293b;
+            padding: 18px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .nav-links a:hover {
+            color: #93c5fd;
+        }
+
+        /* Container */
         .container {
-            max-width: 1450px;
-            margin: auto;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
         }
 
         h1 {
-            text-align: center;
-            margin-bottom: 40px;
+            font-size: 36px;
+            margin-bottom: 10px;
         }
 
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        /* Button tambah */
         .btn-tambah {
             display: inline-block;
-            background: #0d6efd;
+            background: #2563eb;
             color: white;
-            padding: 14px 24px;
+            padding: 14px 25px;
+            border-radius: 8px;
             text-decoration: none;
-            border-radius: 6px;
             font-weight: bold;
             margin-bottom: 25px;
         }
 
         .btn-tambah:hover {
-            background: #0b5ed7;
+            background: #1d4ed8;
         }
 
+        /* Success message */
         .success {
-            background: #d1e7dd;
-            color: #0f5132;
-            padding: 15px;
-            border-radius: 5px;
+            background: #dcfce7;
+            color: #166534;
+            padding: 14px 18px;
+            border-radius: 8px;
             margin-bottom: 20px;
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
         }
 
         table {
@@ -55,140 +104,243 @@
             border-collapse: collapse;
         }
 
-        th {
-            background: #333;
+        thead {
+            background: #1e293b;
             color: white;
-            padding: 15px;
+        }
+
+        th,
+        td {
+            padding: 18px 16px;
             text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            font-size: 16px;
         }
 
         td {
-            padding: 15px;
-            border: 1px solid #ddd;
+            font-size: 16px;
         }
 
-        tr:nth-child(even) {
-            background: #f2f2f2;
+        tbody tr:hover {
+            background: #f8fafc;
         }
 
+        /* Tombol aksi */
         .btn-edit {
-            background: #ffc107;
-            color: black;
-            padding: 10px 16px;
+            display: inline-block;
+            background: #fbbf24;
+            color: #111827;
+            padding: 10px 18px;
+            border-radius: 7px;
             text-decoration: none;
-            border-radius: 5px;
             font-weight: bold;
+            margin-right: 8px;
         }
 
-        .btn-hapus {
+        .btn-edit:hover {
+            background: #f59e0b;
+        }
+
+        .btn-delete {
             background: #dc3545;
             color: white;
-            padding: 10px 16px;
             border: none;
-            border-radius: 5px;
+            padding: 10px 18px;
+            border-radius: 7px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .aksi {
-            display: flex;
-            gap: 10px;
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #94a3b8;
+            margin: 60px 0 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 18px 25px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .container {
+                width: 95%;
+                margin-top: 30px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            th,
+            td {
+                padding: 12px 10px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{{ route('dashboard') }}" class="logo">
+            📚 Library System
+        </a>
 
-    <h1>Daftar Buku Perpustakaan</h1>
-
-    {{-- Pesan sukses --}}
-    @if(session('success'))
-        <div class="success">
-            {{ session('success') }}
+        <div class="nav-links">
+            <a href="{{ route('dashboard') }}">Dashboard</a>
+            <a href="{{ route('books.index') }}">Books</a>
+            <a href="/categories">Categories</a>
+            <a href="/members">Members</a>
         </div>
-    @endif
+    </nav>
 
-    <a href="{{ route('books.create') }}" class="btn-tambah">
-        + Tambah Buku
-    </a>
+    <!-- Content -->
+    <div class="container">
 
-    <table>
+        <h1>Daftar Buku</h1>
 
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Judul</th>
-                <th>Penulis</th>
-                <th>Tahun Terbit</th>
-                <th>Stok</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
+        <p class="subtitle">
+            Daftar buku yang tersedia di perpustakaan.
+        </p>
 
-        <tbody>
+        <!-- Pesan berhasil -->
+        @if (session('success'))
+            <div class="success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-            @forelse($books as $book)
+        <!-- Tombol tambah -->
+        <a href="{{ route('books.create') }}" class="btn-tambah">
+            + Tambah Buku
+        </a>
 
-                <tr>
-                    <td>{{ $book->id }}</td>
+        <!-- Table -->
+        <div class="table-container">
 
-                    <td>{{ $book->judul }}</td>
+            <table>
 
-                    <td>{{ $book->penulis }}</td>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Judul</th>
+                        <th>Penulis</th>
+                        <th>Tahun Terbit</th>
+                        <th>Stok</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
 
-                    <td>{{ $book->tahun_terbit }}</td>
+                <tbody>
 
-                    <td>{{ $book->stok }}</td>
+                    @forelse ($books as $book)
 
-                    <td>
-                        <div class="aksi">
+                        <tr>
 
-                            <a
-                                href="{{ route('books.edit', $book->id) }}"
-                                class="btn-edit"
-                            >
-                                Edit
-                            </a>
+                            <!-- Nomor urut tampilan -->
+                            <td>
+                                {{ $loop->iteration }}
+                            </td>
 
-                            <form
-                                action="{{ route('books.destroy', $book->id) }}"
-                                method="POST"
-                                onsubmit="return confirm('Yakin ingin menghapus buku ini?')"
-                            >
+                            <td>
+                                {{ $book->judul }}
+                            </td>
 
-                                @csrf
-                                @method('DELETE')
+                            <td>
+                                {{ $book->penulis }}
+                            </td>
 
-                                <button
-                                    type="submit"
-                                    class="btn-hapus"
-                                >
-                                    Hapus
-                                </button>
+                            <td>
+                                {{ $book->tahun_terbit }}
+                            </td>
 
-                            </form>
+                            <td>
+                                {{ $book->stok }}
+                            </td>
 
-                        </div>
-                    </td>
-                </tr>
+                            <td>
 
-            @empty
+                                <!-- Detail -->
+                                <a href="{{ route('books.show', $book->id) }}"
+                                   style="
+                                       display: inline-block;
+                                       background: #3b82f6;
+                                       color: white;
+                                       padding: 10px 18px;
+                                       border-radius: 7px;
+                                       text-decoration: none;
+                                       font-weight: bold;
+                                       margin-right: 8px;
+                                   ">
+                                    Detail
+                                </a>
 
-                <tr>
-                    <td colspan="6" style="text-align:center;">
-                        Belum ada data buku.
-                    </td>
-                </tr>
+                                <!-- Edit -->
+                                <a href="{{ route('books.edit', $book->id) }}"
+                                   class="btn-edit">
+                                    Edit
+                                </a>
 
-            @endforelse
+                                <!-- Hapus -->
+                                <form action="{{ route('books.destroy', $book->id) }}"
+                                      method="POST"
+                                      style="display: inline;">
 
-        </tbody>
+                                    @csrf
+                                    @method('DELETE')
 
-    </table>
+                                    <button type="submit"
+                                            class="btn-delete"
+                                            onclick="return confirm('Yakin ingin menghapus buku ini?')">
+                                        Hapus
+                                    </button>
 
-</div>
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 30px;">
+                                Belum ada data buku.
+                            </td>
+                        </tr>
+
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        © {{ date('Y') }} Library System
+    </footer>
 
 </body>
 </html>
