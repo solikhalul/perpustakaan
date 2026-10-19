@@ -33,7 +33,8 @@
             margin-bottom: 8px;
         }
 
-        input {
+        input,
+        select {
             width: 100%;
             padding: 13px;
             margin-bottom: 20px;
@@ -60,6 +61,10 @@
             cursor: pointer;
         }
 
+        .btn:hover {
+            background: #157347;
+        }
+
         .kembali {
             display: inline-block;
             margin-top: 25px;
@@ -79,6 +84,7 @@
 
         @csrf
 
+        <!-- Judul -->
         <label>Judul Buku</label>
 
         <input
@@ -95,6 +101,7 @@
         @enderror
 
 
+        <!-- Penulis -->
         <label>Penulis</label>
 
         <input
@@ -111,6 +118,7 @@
         @enderror
 
 
+        <!-- Tahun Terbit -->
         <label>Tahun Terbit</label>
 
         <input
@@ -127,6 +135,7 @@
         @enderror
 
 
+        <!-- Stok -->
         <label>Stok</label>
 
         <input
@@ -144,6 +153,36 @@
         @enderror
 
 
+        <!-- Kategori -->
+        <label>Kategori</label>
+
+        <select name="category_id">
+
+            <option value="">
+                -- Pilih Kategori --
+            </option>
+
+            @foreach ($categories as $category)
+
+                <option
+                    value="{{ $category->id }}"
+                    {{ old('category_id') == $category->id ? 'selected' : '' }}
+                >
+                    {{ $category->name }}
+                </option>
+
+            @endforeach
+
+        </select>
+
+        @error('category_id')
+            <div class="error">
+                {{ $message }}
+            </div>
+        @enderror
+
+
+        <!-- Tombol -->
         <button type="submit" class="btn">
             Simpan Buku
         </button>

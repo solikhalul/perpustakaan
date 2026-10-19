@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -10,7 +11,7 @@ class BookController extends Controller
     // Menampilkan semua buku
     public function index()
     {
-        $books = Book::all();
+        $books = Book::with('category')->get();
 
         return view('books.index', compact('books'));
     }
@@ -18,7 +19,9 @@ class BookController extends Controller
     // Menampilkan form tambah buku
     public function create()
     {
-        return view('books.create');
+        $categories = Category::all();
+
+        return view('books.create', compact('categories'));
     }
 
     // Menyimpan buku baru
@@ -29,6 +32,7 @@ class BookController extends Controller
             'penulis' => 'required|string|max:255',
             'tahun_terbit' => 'required|integer|min:1000|max:' . date('Y'),
             'stok' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
         ], [
             'judul.required' => 'Judul buku wajib diisi.',
             'judul.string' => 'Judul buku harus berupa teks.',
@@ -46,6 +50,9 @@ class BookController extends Controller
             'stok.required' => 'Stok wajib diisi.',
             'stok.integer' => 'Stok harus berupa angka.',
             'stok.min' => 'Stok tidak boleh kurang dari 0.',
+
+            'category_id.required' => 'Kategori wajib dipilih.',
+            'category_id.exists' => 'Kategori yang dipilih tidak tersedia.',
         ]);
 
         Book::create($validated);
@@ -58,13 +65,17 @@ class BookController extends Controller
     // Menampilkan detail buku
     public function show(Book $book)
     {
+        $book->load('category');
+
         return view('books.show', compact('book'));
     }
 
     // Menampilkan form edit buku
     public function edit(Book $book)
     {
-        return view('books.edit', compact('book'));
+        $categories = Category::all();
+
+        return view('books.edit', compact('book', 'categories'));
     }
 
     // Memperbarui data buku
@@ -75,6 +86,7 @@ class BookController extends Controller
             'penulis' => 'required|string|max:255',
             'tahun_terbit' => 'required|integer|min:1000|max:' . date('Y'),
             'stok' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
         ], [
             'judul.required' => 'Judul buku wajib diisi.',
             'judul.string' => 'Judul buku harus berupa teks.',
@@ -92,6 +104,9 @@ class BookController extends Controller
             'stok.required' => 'Stok wajib diisi.',
             'stok.integer' => 'Stok harus berupa angka.',
             'stok.min' => 'Stok tidak boleh kurang dari 0.',
+
+            'category_id.required' => 'Kategori wajib dipilih.',
+            'category_id.exists' => 'Kategori yang dipilih tidak tersedia.',
         ]);
 
         $book->update($validated);
