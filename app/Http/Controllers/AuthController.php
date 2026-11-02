@@ -7,37 +7,43 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    /**
+     * Menampilkan halaman login.
+     */
     public function showLogin()
     {
-        return view('auth.login');
+        // Jika sudah login, langsung ke halaman buku
+        if (Auth::check()) {
+            return redirect()->route('books.index');
+        }
+
+        return view('login');
     }
 
+    /**
+     * Proses login.
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ], [
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'password.required' => 'Password wajib diisi.',
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()
-                ->intended('/books')
-                ->with('success', 'Login berhasil. Selamat datang!');
+            return redirect()->intended(route('books.index'));
         }
 
         return back()
-            ->withErrors([
-                'email' => 'Email atau password tidak sesuai.',
-            ])
-            ->withInput($request->only('email'));
+            ->withInput($request->only('email'))
+            ->with('error', 'Email atau password salah.');
     }
 
+    /**
+     * Proses logout.
+     */
     public function logout(Request $request)
     {
         Auth::logout();
@@ -45,8 +51,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()
-            ->route('login')
-            ->with('success', 'Kamu berhasil logout.');
+        return redirect()->route('login');
     }
 }
