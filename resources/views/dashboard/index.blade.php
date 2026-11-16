@@ -1,136 +1,124 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Dashboard - Library System</title>
+    <title>Dashboard Perpustakaan</title>
 
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
+            background: #eef4fb;
+            color: #183153;
         }
 
-        /* NAVBAR */
-        nav {
-            background: #1e293b;
-            padding: 18px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            color: white;
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        .menu {
-            display: flex;
-            gap: 28px;
-        }
-
-        .menu a {
-            color: #e2e8f0;
-            text-decoration: none;
-            font-size: 15px;
-        }
-
-        .menu a:hover {
-            color: white;
-        }
-
-        /* CONTENT */
         .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 60px 30px;
+            padding: 30px;
         }
 
         .welcome {
-            margin-bottom: 40px;
+            background: linear-gradient(135deg, #123b70, #2875bd);
+            color: white;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 25px;
         }
 
         .welcome h1 {
-            font-size: 38px;
-            margin-bottom: 12px;
-            color: #0f172a;
+            font-size: 27px;
+            margin-bottom: 10px;
         }
 
         .welcome p {
-            font-size: 17px;
-            color: #64748b;
-            margin: 0;
+            color: #dbeafe;
         }
 
-        /* CARDS */
         .cards {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .card {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            border-left: 5px solid #2875bd;
         }
 
-        .card-title {
-            font-size: 17px;
+        .card h3 {
+            font-size: 15px;
             color: #64748b;
             margin-bottom: 15px;
         }
 
-        .card-number {
-            font-size: 40px;
+        .card .number {
+            font-size: 32px;
             font-weight: bold;
-            color: #0f172a;
+            color: #123b70;
         }
 
-        .card-description {
-            margin-top: 10px;
-            color: #94a3b8;
-            font-size: 14px;
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            overflow-x: auto;
         }
 
-        /* FOOTER */
-        footer {
+        .section h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        th {
+            background: #edf4fc;
+            color: #123b70;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #dbeafe;
+            color: #1d4e89;
+            font-size: 12px;
+        }
+
+        .empty {
             text-align: center;
-            padding: 30px;
-            color: #94a3b8;
-            font-size: 14px;
+            color: #64748b;
+            padding: 25px;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            nav {
-                padding: 18px 20px;
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .menu {
-                gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
             }
 
             .welcome h1 {
-                font-size: 30px;
+                font-size: 22px;
             }
         }
     </style>
@@ -138,100 +126,88 @@
 
 <body>
 
-    <!-- NAVBAR -->
-    <nav>
+    @include('layouts.navigation')
 
-        <div class="logo">
-            📚 Library System
-        </div>
-
-        <div class="menu">
-            <a href="{{ url('/dashboard') }}">Dashboard</a>
-            <a href="{{ url('/books') }}">Books</a>
-            <a href="{{ url('/categories') }}">Categories</a>
-            <a href="{{ url('/members') }}">Members</a>
-        </div>
-
-    </nav>
-
-
-    <!-- CONTENT -->
     <div class="container">
 
         <div class="welcome">
-
-            <h1>Library System Dashboard</h1>
-
-            <p>
-                Selamat datang di Sistem Informasi Perpustakaan.
-                Kelola data perpustakaan dengan mudah dan terorganisir.
-            </p>
-
+            <h1>Dashboard Perpustakaan 📚</h1>
+            <p>Selamat datang, {{ Auth::user()->name ?? 'Pengguna' }}!</p>
+            <p>Kelola data buku, anggota, kategori, dan transaksi peminjaman melalui sistem ini.</p>
         </div>
 
-
-        <!-- STATISTICS -->
         <div class="cards">
 
             <div class="card">
-
-                <div class="card-title">
-                    📚 Total Buku
-                </div>
-
-                <div class="card-number">
-                    {{ $jumlahBuku }}
-                </div>
-
-                <div class="card-description">
-                    Jumlah buku dalam perpustakaan
-                </div>
-
+                <h3>📚 Total Buku</h3>
+                <div class="number">{{ $jumlahBuku }}</div>
             </div>
-
 
             <div class="card">
-
-                <div class="card-title">
-                    👥 Total Member
-                </div>
-
-                <div class="card-number">
-                    {{ $jumlahMember }}
-                </div>
-
-                <div class="card-description">
-                    Jumlah anggota perpustakaan
-                </div>
-
+                <h3>👥 Total Anggota</h3>
+                <div class="number">{{ $jumlahMember }}</div>
             </div>
-
 
             <div class="card">
-
-                <div class="card-title">
-                    📂 Total Kategori
-                </div>
-
-                <div class="card-number">
-                    {{ $jumlahKategori }}
-                </div>
-
-                <div class="card-description">
-                    Jumlah kategori buku
-                </div>
-
+                <h3>📂 Total Kategori</h3>
+                <div class="number">{{ $jumlahKategori }}</div>
             </div>
+
+            <div class="card">
+                <h3>📝 Total Peminjaman</h3>
+                <div class="number">{{ $jumlahPeminjaman }}</div>
+            </div>
+
+            <div class="card">
+                <h3>📖 Peminjaman Aktif</h3>
+                <div class="number">{{ $jumlahBukuDipinjam }}</div>
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <h2>Transaksi Peminjaman Terbaru</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Nama Anggota</th>
+                        <th>Petugas</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Jatuh Tempo</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($peminjamanTerbaru as $index => $loan)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $loan->member->nama ?? '-' }}</td>
+                            <td>{{ $loan->user->name ?? '-' }}</td>
+                            <td>{{ $loan->tanggal_pinjam->format('d-m-Y') }}</td>
+                            <td>{{ $loan->tanggal_jatuh_tempo->format('d-m-Y') }}</td>
+                            <td>
+                                <span class="status">
+                                    {{ ucfirst(str_replace('_', ' ', $loan->status)) }}
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="empty">
+                                Belum ada transaksi peminjaman.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
 
         </div>
 
     </div>
-
-
-    <!-- FOOTER -->
-    <footer>
-        &copy; {{ date('Y') }} Library System
-    </footer>
 
 </body>
 </html>
